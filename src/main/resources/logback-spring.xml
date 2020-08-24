@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <!---自定义输出属性-->
+    <springProperty scope="context" name="logLevel" source="log.level"/>
+    <springProperty scope="context" name="logPath" source="log.path"/>
+    <springProperty scope="context" name="logMaxSize" source="logging.file.max-size"/>
+    <springProperty scope="context" name="logMaxHistory" source="logging.file.max-history"/>
+    <!--应用名称-->
+    <property name="APP_NAME" value="cnlab-server"/>
+    <!--日志文件保存路径-->
+    <property name="LOG_HOME" value="${logPath}/logs}"/>
+    <property name="FILE_LOG_PATTERN"
+              value="[%d{MM/dd HH:mm:ss.SSS}][%-10.10thread][%-5level][%-40.40c{1}:%5line]:[%15method] || %m%n"/>
+    <contextName>${APP_NAME}</contextName>
+    <!--每天记录日志到文件appender-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}.%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+            <!--日志文件最大的大小-->
+            <maxFileSize>${logMaxSize}</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>${logMaxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!--输出到logstash的appender later used-->
+    <!--    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+            <destination>localhost:4560</destination>
+            <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>-->
+    <root level="${logLevel}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>>
+    </root>
+</configuration>

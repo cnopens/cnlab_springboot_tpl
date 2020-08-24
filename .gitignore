@@ -15,7 +15,6 @@ src/main/resources/email/
 src/main/resources/generator.properties
 src/main/resources/generatorConfig.xml
 src/main/resources/sql/
-src/main/java/com/ds/dss/mbg/*.java
 src/test/
 target/
 /src/main/java/com/ds/dss/mbg/CommentGenerator.java
